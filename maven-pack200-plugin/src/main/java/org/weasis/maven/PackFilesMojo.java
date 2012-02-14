@@ -83,6 +83,7 @@ public class PackFilesMojo extends AbstractMojo {
     /**
      * Will jars be signed. If null normalizeOnly is not executed.
      * 
+     * @parameter
      */
     private String signed;
 

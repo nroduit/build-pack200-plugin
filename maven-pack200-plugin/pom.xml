@@ -4,7 +4,7 @@
 
 	<groupId>org.weasis.maven</groupId>
 	<artifactId>maven-pack200-plugin</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<packaging>maven-plugin</packaging>
 
 	<name>Pack200 Maven Plugin</name>
