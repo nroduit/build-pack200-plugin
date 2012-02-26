@@ -13,7 +13,13 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
+	
+	<repositories>
+		<repository>
+			<id>weasis</id>
+			<url>http://dicom.vital-it.ch:8087/nexus/content/groups/public</url>
+		</repository>
+	</repositories>
 	<!-- Maven server for deploying releases -->
 	<distributionManagement>
 		<repository>
