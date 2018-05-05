@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +32,7 @@ import org.codehaus.plexus.util.StringUtils;
  */
 public class PackFilesMojo extends AbstractMojo {
 
+    private static final String ORIGINAL_JAR = ".original.jar";
     /**
      * The base directory to scan for JAR files using Ant-like inclusion/exclusion patterns.
      * 
@@ -183,39 +187,35 @@ public class PackFilesMojo extends AbstractMojo {
         File packFile = new File(outputDirectory, filename + ".pack");
         File zipFile = new File(outputDirectory, filename + ".pack.gz");
         try {
-            JarFile jar = new JarFile(jarFile);
-            FileOutputStream fos = new FileOutputStream(packFile);
 
-            getLog().debug("packing " + filename + " to " + packFile);
-            packer.pack(jar, fos);
-
-            getLog().debug("closing handles ...");
-            jar.close();
-            fos.close();
+            try (JarFile jar = new JarFile(jarFile); FileOutputStream fos = new FileOutputStream(packFile)) {
+                getLog().debug("packing " + filename + " to " + packFile);
+                packer.pack(jar, fos);
+                getLog().debug("closing handles ...");
+            }
 
             if (normalizeOnly) {
                 getLog().debug("unpacking " + packFile + " to " + filename);
-                jarFile.renameTo(new File(jarFile.getPath() + ".original.jar"));
-                JarOutputStream origJarStream = new JarOutputStream(new FileOutputStream(jarFile));
-                unpacker.unpack(packFile, origJarStream);
-
-                getLog().debug("closing handles...");
-                origJarStream.close();
+                Files.move(jarFile.toPath(), Paths.get(jarFile.getPath() + ORIGINAL_JAR),
+                    StandardCopyOption.REPLACE_EXISTING);
+                try (JarOutputStream origJarStream = new JarOutputStream(new FileOutputStream(jarFile))) {
+                    unpacker.unpack(packFile, origJarStream);
+                    getLog().debug("closing handles...");
+                }
 
                 getLog().debug("unpacked file");
             } else {
                 if (compress) {
                     getLog().debug("compressing " + packFile + " to " + zipFile);
-                    GZIPOutputStream zipOut = new GZIPOutputStream(new FileOutputStream(zipFile));
-                    IOUtil.copy(new FileInputStream(packFile), zipOut);
-                    zipOut.close();
-                    packFile.delete();
-                    File original = new File(jarFile.getPath() + ".original.jar");
+                    try (FileInputStream in =new FileInputStream(packFile); GZIPOutputStream zipOut = new GZIPOutputStream(new FileOutputStream(zipFile))) {
+                        IOUtil.copy(in, zipOut);
+                    }
+                    Files.delete(packFile.toPath());
+                    File original = new File(jarFile.getPath() + ORIGINAL_JAR);
                     if (original.canRead()) {
-                        original.renameTo(jarFile);
+                        Files.move(original.toPath(), jarFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                     }
                 }
-
             }
 
             getLog().debug("finished " + (normalizeOnly ? "normalizing" : "packing") + " " + packFile);
