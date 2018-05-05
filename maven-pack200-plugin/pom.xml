@@ -3,17 +3,15 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.weasis.maven</groupId>
-	<artifactId>maven-pack200-plugin</artifactId>
+	<artifactId>build-pack200-plugin</artifactId>
 	<version>1.0.4</version>
 	<packaging>maven-plugin</packaging>
-
 	<name>Pack200 Maven Plugin</name>
-	<url>http://maven.apache.org</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
@@ -40,7 +38,7 @@
 				<artifactId>maven-plugin-plugin</artifactId>
 				<version>3.5.1</version>
 				<configuration>
-					<goalPrefix>pack200</goalPrefix>
+					<goalPrefix>build-pack200</goalPrefix>
 				</configuration>
 				<executions>
 					<execution>

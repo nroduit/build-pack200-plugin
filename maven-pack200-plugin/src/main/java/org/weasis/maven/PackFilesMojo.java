@@ -36,14 +36,14 @@ public class PackFilesMojo extends AbstractMojo {
     /**
      * The base directory to scan for JAR files using Ant-like inclusion/exclusion patterns.
      * 
-     * @parameter expression="${pack200.archiveDirectory}"
+     * @parameter property="pack200.archiveDirectory"
      * @required
      */
     private File archiveDirectory;
     /**
      * The directory where pack200 files are written.
      * 
-     * @parameter expression="${pack200.outputDirectory}"
+     * @parameter property="pack200.outputDirectory"
      */
     private File outputDirectory;
     /**
