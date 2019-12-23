@@ -12,6 +12,14 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+	<licenses>
+		<license>
+			<name>Eclipse Public License v2.0</name>
+			<url>http://www.eclipse.org/legal/epl-v20.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
